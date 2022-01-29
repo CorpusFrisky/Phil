@@ -61,11 +61,17 @@ class PuzReader {
     for (var i = 0; i < w * h; i++) {
       if (grid[i] == '.') continue;
       var inc = 0;
-      if (i % w == 0 || grid[i - 1] == '.') {
+      // For cryptics, start an across clue if we're in the left-most column and the cell to the right isn't '.' OR...
+      if ( (i % w == 0 && grid[i + 1] != '.') ||
+      // we are not on the left-most or right-most column and the cell to the left is '.' while the cell to the right is not '.'    
+            (i % w != 0 && i % w != (w - 1) && grid[i-1] == '.' && grid[i + 1] != '.')) {
         across.push(label + ". " + this.readString());
         inc = 1;
       }
-      if (i < w || grid[i - w] == '.') {
+      // For cryptics, start a down clue if we're on the top row and the cell below is not a '.' OR...
+      if ( (i < w && grid[i + w] != '.') ||
+      //  If we are not on the bottom row and the cell above is '.' and the cell below is not '.'
+          ( i + w < w * h && grid[i-w] == '.' && grid[i+w] != '.')) {
         down.push(label + ". " + this.readString());
         inc = 1;
       }
